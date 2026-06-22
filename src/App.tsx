@@ -1,31 +1,26 @@
-import { lazy, Suspense, useEffect } from "react";
-import "./App.css";
+import { lazy, Suspense, useEffect, memo } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { logWebVitals } from "./utils/performance";
+import { LoadingProvider } from "./context/LoadingProvider";
+import "./App.css";
 
 const CharacterModel = lazy(() => import("./components/Character"));
 const MainContainer = lazy(() => import("./components/MainContainer"));
-import { LoadingProvider } from "./context/LoadingProvider";
 
-const LoadingFallback = () => (
-  <div className="loading-fallback">
-    <div className="loading-spinner">
-      <div className="spinner-ring"></div>
-      <div className="spinner-text">Loading Portfolio...</div>
+const LoadingFallback = memo(function LoadingFallback() {
+  return (
+    <div className="loading-fallback">
+      <div className="loading-spinner">
+        <div className="spinner-ring"></div>
+        <div className="spinner-text">Loading Portfolio...</div>
+      </div>
     </div>
-  </div>
-);
+  );
+});
 
-const App = () => {
+const App = memo(function App() {
   useEffect(() => {
-    // Initialize performance monitoring
     logWebVitals();
-    
-    // Prevent context menu on right-click for production build
-    if (import.meta.env.PROD) {
-      // Optional: uncomment if needed
-      // document.addEventListener("contextmenu", (e) => e.preventDefault());
-    }
   }, []);
 
   return (
@@ -41,6 +36,6 @@ const App = () => {
       </LoadingProvider>
     </ErrorBoundary>
   );
-};
+});
 
 export default App;

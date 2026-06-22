@@ -1,4 +1,4 @@
-type RenderProfile = {
+export type RenderProfile = {
   isLowPower: boolean;
   isMidPower: boolean;
   enableShadows: boolean;

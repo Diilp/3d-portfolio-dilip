@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import "./styles/Work.css";
-import WorkImage from "./WorkImage";
+import { useState, useCallback, memo } from "react";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import WorkImage from "./WorkImage";
+import "./styles/Work.css";
 
 const projects = [
   {
@@ -28,68 +28,62 @@ const projects = [
     tools: "170+ LeetCode problems, arrays, trees, graphs, recursion, DP",
     link: "/Dilip_Kumar_Yadav_Resume.pdf",
   },
-];
+] as const;
 
-const Work = () => {
+const Work = memo(function Work() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const goToSlide = useCallback(
-    (index: number) => {
-      if (isAnimating) return;
-      setIsAnimating(true);
-      setCurrentIndex(index);
-      setTimeout(() => setIsAnimating(false), 500);
-    },
-    [isAnimating]
-  );
+  const goToSlide = useCallback((index: number) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsAnimating(false), 500);
+  }, [isAnimating]);
 
   const goToPrev = useCallback(() => {
-    const newIndex =
-      currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
-    goToSlide(newIndex);
-  }, [currentIndex, goToSlide]);
+    setCurrentIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
+  }, []);
 
   const goToNext = useCallback(() => {
-    const newIndex =
-      currentIndex === projects.length - 1 ? 0 : currentIndex + 1;
-    goToSlide(newIndex);
-  }, [currentIndex, goToSlide]);
+    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
+  }, []);
 
   return (
-    <div className="work-section" id="work">
+    <section className="work-section" id="work" aria-labelledby="work-title">
       <div className="work-container section-container">
-        <h2>
+        <h2 id="work-title">
           Selected <span>Work</span>
         </h2>
 
-        <div className="carousel-wrapper">
+        <div className="carousel-wrapper" role="region" aria-label="Projects carousel">
           <button
             className="carousel-arrow carousel-arrow-left"
             onClick={goToPrev}
             aria-label="Previous project"
             data-cursor="disable"
+            type="button"
           >
-            <MdArrowBack />
+            <MdArrowBack aria-hidden="true" />
           </button>
           <button
             className="carousel-arrow carousel-arrow-right"
             onClick={goToNext}
             aria-label="Next project"
             data-cursor="disable"
+            type="button"
           >
-            <MdArrowForward />
+            <MdArrowForward aria-hidden="true" />
           </button>
 
           <div className="carousel-track-container">
             <div
               className="carousel-track"
-              style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
-              }}
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              role="list"
             >
               {projects.map((project, index) => (
-                <div className="carousel-slide" key={project.title}>
+                <article className="carousel-slide" key={project.title} role="listitem">
                   <div className="carousel-content">
                     <div className="carousel-info">
                       <div className="carousel-number">
@@ -97,9 +91,7 @@ const Work = () => {
                       </div>
                       <div className="carousel-details">
                         <h4>{project.title}</h4>
-                        <p className="carousel-category">
-                          {project.category}
-                        </p>
+                        <p className="carousel-category">{project.category}</p>
                         <div className="carousel-tools">
                           <span className="tools-label">Tools & Features</span>
                           <p>{project.tools}</p>
@@ -116,12 +108,12 @@ const Work = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
 
-          <div className="carousel-dots">
+          <div className="carousel-dots" role="tablist" aria-label="Project slides">
             {projects.map((project, index) => (
               <button
                 key={project.title}
@@ -129,15 +121,18 @@ const Work = () => {
                   index === currentIndex ? "carousel-dot-active" : ""
                 }`}
                 onClick={() => goToSlide(index)}
-                aria-label={`Go to project ${index + 1}`}
+                aria-label={`Go to project ${index + 1}: ${project.title}`}
+                aria-selected={index === currentIndex}
+                role="tab"
                 data-cursor="disable"
+                type="button"
               />
             ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
+});
 
 export default Work;

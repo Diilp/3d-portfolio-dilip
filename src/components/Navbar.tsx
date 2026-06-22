@@ -1,16 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import HoverLinks from "./HoverLinks";
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
-import "./styles/Navbar.css";
+import HoverLinks from "./HoverLinks";
 import { setSmoother, smoother } from "./utils/smoother";
+import "./styles/Navbar.css";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
-const Navbar = () => {
+const navLinks = [
+  { href: "#about", label: "ABOUT" },
+  { href: "#career", label: "EXPERIENCE" },
+  { href: "#work", label: "WORK" },
+  { href: "#skills", label: "SKILLS" },
+  { href: "#achievements", label: "ACHIEVEMENTS" },
+  { href: "#contact", label: "CONNECT" },
+] as const;
+
+const Navbar = memo(function Navbar() {
   useEffect(() => {
-    setSmoother(ScrollSmoother.create({
+    const smootherInstance = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
       smooth: 1.7,
@@ -18,76 +27,68 @@ const Navbar = () => {
       effects: true,
       autoResize: true,
       ignoreMobileResize: true,
-    }));
+    });
 
+    setSmoother(smootherInstance);
     smoother.scrollTop(0);
     smoother.paused(true);
 
-    const links = document.querySelectorAll(".header ul a");
-    links.forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", (e) => {
-        if (window.innerWidth > 1024) {
-          e.preventDefault();
-          const elem = e.currentTarget as HTMLAnchorElement;
-          const section = elem.getAttribute("data-href");
-          smoother.scrollTo(section, true, "top top");
-        }
+    const handleLinkClick = (e: MouseEvent) => {
+      if (window.innerWidth <= 1024) return;
+
+      const target = e.currentTarget as HTMLAnchorElement;
+      const section = target.getAttribute("data-href");
+      if (section) {
+        e.preventDefault();
+        smoother.scrollTo(section, true, "top top");
+      }
+    };
+
+    const links = document.querySelectorAll<HTMLAnchorElement>(".header ul a");
+    links.forEach((link) => {
+      link.addEventListener("click", handleLinkClick);
+    });
+
+    const handleResize = () => ScrollSmoother.refresh(true);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      links.forEach((link) => {
+        link.removeEventListener("click", handleLinkClick);
       });
-    });
-    window.addEventListener("resize", () => {
-      ScrollSmoother.refresh(true);
-    });
+      window.removeEventListener("resize", handleResize);
+      smootherInstance.kill();
+    };
   }, []);
+
   return (
     <>
-      <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable">
-          <span className="navbar-mark">DKY</span>
+      <header className="header" role="banner">
+        <a href="/" className="navbar-title" data-cursor="disable" aria-label="Home - Dilip Kumar Yadav">
+          <span className="navbar-mark" aria-hidden="true">DKY</span>
           <span className="navbar-name">
             <strong>Dilip Kumar Yadav</strong>
             <small>Full Stack Developer</small>
           </span>
         </a>
-        <ul>
-          <li>
-            <a data-href="#about" href="#about">
-              <HoverLinks text="ABOUT" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#career" href="#career">
-              <HoverLinks text="EXPERIENCE" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#work" href="#work">
-              <HoverLinks text="WORK" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#skills" href="#skills">
-              <HoverLinks text="SKILLS" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#achievements" href="#achievements">
-              <HoverLinks text="ACHIEVEMENTS" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#contact" href="#contact">
-              <HoverLinks text="CONNECT" />
-            </a>
-          </li>
-        </ul>
-      </div>
+        <nav>
+          <ul role="list">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <a data-href={link.href} href={link.href}>
+                  <HoverLinks text={link.label} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
 
-      <div className="landing-circle1"></div>
-      <div className="landing-circle2"></div>
-      <div className="nav-fade"></div>
+      <div className="landing-circle1" aria-hidden="true"></div>
+      <div className="landing-circle2" aria-hidden="true"></div>
+      <div className="nav-fade" aria-hidden="true"></div>
     </>
   );
-};
+});
 
 export default Navbar;

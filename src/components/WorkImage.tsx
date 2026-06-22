@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { MdArrowOutward } from "react-icons/md";
 
-interface Props {
+interface WorkImageProps {
   title: string;
   category: string;
   tools: string;
@@ -8,36 +9,43 @@ interface Props {
   link?: string;
 }
 
-const WorkImage = (props: Props) => {
+const WorkImage = memo(function WorkImage({
+  title,
+  category,
+  tools,
+  index,
+  link,
+}: WorkImageProps) {
   return (
     <div className="work-image">
       <a
         className="work-image-in"
-        href={props.link}
+        href={link}
         target="_blank"
-        rel="noreferrer"
-        data-cursor={"disable"}
+        rel="noopener noreferrer"
+        data-cursor="disable"
+        aria-label={`View ${title} project`}
       >
-        {props.link && (
-          <div className="work-link">
+        {link && (
+          <div className="work-link" aria-hidden="true">
             <MdArrowOutward />
           </div>
         )}
         <div className="project-visual">
-          <div className="project-visual-grid" />
-          <div className="project-visual-orb project-visual-orb-one" />
-          <div className="project-visual-orb project-visual-orb-two" />
-          <span className="project-visual-index">0{props.index + 1}</span>
+          <div className="project-visual-grid" aria-hidden="true" />
+          <div className="project-visual-orb project-visual-orb-one" aria-hidden="true" />
+          <div className="project-visual-orb project-visual-orb-two" aria-hidden="true" />
+          <span className="project-visual-index" aria-hidden="true">0{index + 1}</span>
           <div className="project-visual-content">
             <span>Dilip Kumar Yadav</span>
-            <h5>{props.title}</h5>
-            <p>{props.category}</p>
-            <small>{props.tools}</small>
+            <h5>{title}</h5>
+            <p>{category}</p>
+            <small>{tools}</small>
           </div>
         </div>
       </a>
     </div>
   );
-};
+});
 
 export default WorkImage;

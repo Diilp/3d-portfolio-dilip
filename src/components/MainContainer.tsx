@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { memo, useEffect, useState, type PropsWithChildren } from "react";
 import About from "./About";
 import Achievements from "./Achievements";
 import Career from "./Career";
@@ -14,10 +14,10 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "./utils/splitText";
 
-const MainContainer = ({ children }: PropsWithChildren) => {
-  const [isDesktopView, setIsDesktopView] = useState<boolean>(
-    window.innerWidth > 1024
-  );
+const DESKTOP_BREAKPOINT = 1024;
+
+const MainContainer = memo(function MainContainer({ children }: PropsWithChildren) {
+  const [isDesktopView, setIsDesktopView] = useState(() => window.innerWidth > DESKTOP_BREAKPOINT);
 
   useEffect(() => {
     let resizeTimer: number | undefined;
@@ -26,11 +26,11 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         setSplitText();
-        setIsDesktopView(window.innerWidth > 1024);
+        setIsDesktopView(window.innerWidth > DESKTOP_BREAKPOINT);
       }, 150);
     };
 
-    resizeHandler();
+    setSplitText();
     window.addEventListener("resize", resizeHandler);
     return () => {
       window.clearTimeout(resizeTimer);
@@ -66,7 +66,7 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       {isDesktopView && children}
       <div id="smooth-wrapper">
         <div id="smooth-content">
-          <div className="container-main">
+          <main className="container-main">
             <Landing>{!isDesktopView && children}</Landing>
             <About />
             <div className="reveal-on-scroll">
@@ -91,11 +91,11 @@ const MainContainer = ({ children }: PropsWithChildren) => {
             <div className="reveal-on-scroll">
               <Contact />
             </div>
-          </div>
+          </main>
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default MainContainer;
