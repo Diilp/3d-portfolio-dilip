@@ -1,0 +1,129 @@
+.about-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  place-items: center;
+  position: relative;
+  opacity: 1;
+  height: auto;
+  width: var(--cWidth);
+  margin: auto;
+  min-height: 60vh;
+  padding: 80px 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(94, 234, 212, 0.03) 50%, transparent 100%);
+}
+
+.about-me {
+  padding: 50px 0px;
+  padding-bottom: 0;
+  width: 500px;
+  max-width: calc(100% - 15px);
+  animation: slideInUp 0.8s ease-out both;
+}
+
+.about-me h3 {
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 500;
+  color: var(--accentColor);
+  margin-bottom: 24px;
+  opacity: 0.9;
+  position: relative;
+  padding-left: 20px;
+}
+
+.about-me h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: var(--accentColor);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.about-me p {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: 0.5px;
+  color: var(--textPrimary);
+  position: relative;
+  z-index: 2;
+}
+
+.about-me p::first-letter {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accentColor);
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 600px) {
+  .about-section {
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 50vh;
+  }
+
+  .about-me p {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .about-section {
+    justify-content: center;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .about-me {
+    width: 500px;
+    max-width: calc(100% - 70px);
+    transform: translateY(0%);
+  }
+
+  .about-section {
+    opacity: 1;
+  }
+
+  .about-me p {
+    font-size: 20px;
+    line-height: 36px;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .about-section {
+    width: var(--cWidth);
+    justify-content: flex-end;
+    max-width: 1920px;
+    height: var(--vh);
+    padding: 0px;
+    opacity: 1;
+  }
+
+  .about-me {
+    padding: 0px;
+    width: 45%;
+    animation: slideInLeft 0.8s ease-out both;
+  }
+
+  .about-me p {
+    font-size: 1.8vw;
+    line-height: 2.2vw;
+  }
+}
+
+@media only screen and (min-width: 1950px) {
+  .about-me p {
+    font-size: 2.3rem;
+    line-height: 2.6rem;
+  }
+}
