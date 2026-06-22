@@ -89,6 +89,7 @@
   filter: blur(30px);
   opacity: 1;
   transition: opacity 500ms;
+  pointer-events: none;
 }
 
 .loading-wrap:hover .loading-hover {

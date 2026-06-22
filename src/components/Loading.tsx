@@ -78,6 +78,23 @@ const Loading = ({ percent }: { percent: number }) => {
     target.style.setProperty("--mouse-y", `${y}px`);
   }
 
+  function handleClick() {
+    if (!loaded || clicked) return;
+    setClicked(true);
+
+    import("./utils/initialFX")
+      .then((module) => {
+        if (module.initialFX) {
+          module.initialFX();
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Failed to load initial page animation:", error);
+        setIsLoading(false);
+      });
+  }
+
   return (
     <>
       <div className="loading-header">
@@ -105,6 +122,7 @@ const Loading = ({ percent }: { percent: number }) => {
         <div
           className={`loading-wrap ${clicked && "loading-clicked"}`}
           onMouseMove={(e) => handleMouseMove(e)}
+          onClick={handleClick}
         >
           <div className="loading-hover"></div>
           <div className={`loading-button ${loaded && "loading-complete"}`}>
