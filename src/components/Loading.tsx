@@ -1,41 +1,65 @@
-import { useEffect, useState, memo, useCallback } from "react";
-import { useLoading } from "../context/loadingContext";
-import Marquee from "react-fast-marquee";
+import { useEffect, useState } from "react";
 import "./styles/Loading.css";
+import { useLoading } from "../context/loadingContext";
 
-const Loading = memo(function Loading({ percent }: { percent: number }) {
+import Marquee from "react-fast-marquee";
+
+const Loading = ({ percent }: { percent: number }) => {
   const { setIsLoading } = useLoading();
   const [loaded, setLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     if (percent >= 100 && !loaded) {
-      const showWelcomeTimer = window.setTimeout(() => setLoaded(true), 600);
-      return () => window.clearTimeout(showWelcomeTimer);
+      const showWelcome = window.setTimeout(() => {
+        setLoaded(true);
+      }, 600);
+      const revealSite = window.setTimeout(() => {
+        setIsLoaded(true);
+      }, 1600);
+
+      return () => {
+        window.clearTimeout(showWelcome);
+        window.clearTimeout(revealSite);
+      };
     }
   }, [percent, loaded]);
 
   useEffect(() => {
-    if (!clicked) return;
+    if (!isLoaded) return;
 
+    let timeoutId: number | undefined;
     let cancelled = false;
 
-    const timeoutId = window.setTimeout(() => {
-      if (cancelled) return;
-      import("./utils/initialFX")
-        .then((module) => {
-          if (!cancelled && module.initialFX) {
-            module.initialFX();
+    setClicked(true);
+
+    import("./utils/initialFX")
+      .then((module) => {
+        timeoutId = window.setTimeout(() => {
+          if (cancelled) return;
+
+          if (module.initialFX) {
+            try {
+              module.initialFX();
+            } catch (error) {
+              console.error("Initial page animation failed:", error);
+            }
           }
-        })
-        .catch((error) => {
-          console.error("Initial animation failed:", error);
-        });
-      setIsLoading(false);
-    }, 900);
+          setIsLoading(false);
+        }, 900);
+      })
+      .catch((error) => {
+        console.error("Failed to load initial page animation:", error);
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
 
     const fallbackId = window.setTimeout(() => {
-      if (!cancelled) setIsLoading(false);
+      if (!cancelled) {
+        setIsLoading(false);
+      }
     }, 2500);
 
     return () => {
@@ -43,27 +67,24 @@ const Loading = memo(function Loading({ percent }: { percent: number }) {
       window.clearTimeout(timeoutId);
       window.clearTimeout(fallbackId);
     };
-  }, [clicked, setIsLoading]);
+  }, [isLoaded, setIsLoading]);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+  function handleMouseMove(e: React.MouseEvent<HTMLElement>) {
     const { currentTarget: target } = e;
     const rect = target.getBoundingClientRect();
-    target.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-    target.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-  }, []);
-
-  const handleClick = useCallback(() => {
-    if (!loaded || clicked) return;
-    setClicked(true);
-  }, [loaded, clicked]);
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    target.style.setProperty("--mouse-x", `${x}px`);
+    target.style.setProperty("--mouse-y", `${y}px`);
+  }
 
   return (
     <>
-      <header className="loading-header">
-        <a href="/" className="loader-title" data-cursor="disable">
+      <div className="loading-header">
+        <a href="/#" className="loader-title" data-cursor="disable">
           DKY
         </a>
-        <div className={`loaderGame ${clicked ? "loader-out" : ""}`} aria-hidden="true">
+        <div className={`loaderGame ${clicked && "loader-out"}`}>
           <div className="loaderGame-container">
             <div className="loaderGame-in">
               {[...Array(27)].map((_, index) => (
@@ -73,21 +94,20 @@ const Loading = memo(function Loading({ percent }: { percent: number }) {
             <div className="loaderGame-ball"></div>
           </div>
         </div>
-      </header>
-      <div className="loading-screen" role="progressbar" aria-valuenow={percent} aria-valuemin={0} aria-valuemax={100} aria-label="Loading portfolio">
-        <div className="loading-marquee" aria-hidden="true">
+      </div>
+      <div className="loading-screen">
+        <div className="loading-marquee">
           <Marquee>
             <span> Full Stack Developer</span> <span>Software Engineer</span>
             <span> Full Stack Developer</span> <span>Software Engineer</span>
           </Marquee>
         </div>
         <div
-          className={`loading-wrap ${clicked ? "loading-clicked" : ""}`}
-          onMouseMove={handleMouseMove}
-          onClick={handleClick}
+          className={`loading-wrap ${clicked && "loading-clicked"}`}
+          onMouseMove={(e) => handleMouseMove(e)}
         >
           <div className="loading-hover"></div>
-          <div className={`loading-button ${loaded ? "loading-complete" : ""}`}>
+          <div className={`loading-button ${loaded && "loading-complete"}`}>
             <div className="loading-container">
               <div className="loading-content">
                 <div className="loading-content-in">
@@ -104,6 +124,6 @@ const Loading = memo(function Loading({ percent }: { percent: number }) {
       </div>
     </>
   );
-});
+};
 
 export default Loading;

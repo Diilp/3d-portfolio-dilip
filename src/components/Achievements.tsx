@@ -1,4 +1,3 @@
-import { memo } from "react";
 import "./styles/ProfessionalSections.css";
 
 const metrics = [
@@ -22,19 +21,14 @@ const metrics = [
     label: "AI Certified",
     detail: "Oracle Cloud Infrastructure AI Foundations Associate",
   },
-] as const;
+];
 
-const credentials = [
-  "Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate",
-  "ServiceNow Certification - In Progress",
-] as const;
-
-const Achievements = memo(function Achievements() {
+const Achievements = () => {
   return (
-    <section className="pro-section section-container" id="achievements" aria-labelledby="achievements-title">
+    <section className="pro-section section-container" id="achievements">
       <div className="section-kicker">Proof of Work</div>
       <div className="section-heading-row">
-        <h2 id="achievements-title">
+        <h2>
           Achievements <span>& credentials</span>
         </h2>
         <p>
@@ -43,9 +37,9 @@ const Achievements = memo(function Achievements() {
         </p>
       </div>
 
-      <div className="metric-grid" role="list">
+      <div className="metric-grid">
         {metrics.map((metric) => (
-          <article className="metric-card" key={metric.label} role="listitem">
+          <article className="metric-card" key={metric.label}>
             <strong>{metric.value}</strong>
             <h3>{metric.label}</h3>
             <p>{metric.detail}</p>
@@ -56,13 +50,12 @@ const Achievements = memo(function Achievements() {
       <div className="credential-panel">
         <h3>Certifications & Credentials</h3>
         <div className="credential-list">
-          {credentials.map((credential) => (
-            <span key={credential}>{credential}</span>
-          ))}
+          <span>Oracle Cloud Infrastructure 2025 Certified AI Foundations Associate</span>
+          <span>ServiceNow Certification - In Progress</span>
         </div>
       </div>
     </section>
   );
-});
+};
 
 export default Achievements;

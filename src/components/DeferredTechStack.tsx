@@ -1,8 +1,8 @@
-import { lazy, Suspense, useEffect, useRef, useState, memo } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 
 const TechStack = lazy(() => import("./TechStack"));
 
-const DeferredTechStack = memo(function DeferredTechStack() {
+const DeferredTechStack = () => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
@@ -37,6 +37,6 @@ const DeferredTechStack = memo(function DeferredTechStack() {
       )}
     </div>
   );
-});
+};
 
 export default DeferredTechStack;

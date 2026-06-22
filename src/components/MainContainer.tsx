@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, type PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import About from "./About";
 import Achievements from "./Achievements";
 import Career from "./Career";
@@ -14,10 +14,10 @@ import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "./utils/splitText";
 
-const DESKTOP_BREAKPOINT = 1024;
-
-const MainContainer = memo(function MainContainer({ children }: PropsWithChildren) {
-  const [isDesktopView, setIsDesktopView] = useState(() => window.innerWidth > DESKTOP_BREAKPOINT);
+const MainContainer = ({ children }: PropsWithChildren) => {
+  const [isDesktopView, setIsDesktopView] = useState<boolean>(
+    window.innerWidth > 1024
+  );
 
   useEffect(() => {
     let resizeTimer: number | undefined;
@@ -26,11 +26,11 @@ const MainContainer = memo(function MainContainer({ children }: PropsWithChildre
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         setSplitText();
-        setIsDesktopView(window.innerWidth > DESKTOP_BREAKPOINT);
+        setIsDesktopView(window.innerWidth > 1024);
       }, 150);
     };
 
-    setSplitText();
+    resizeHandler();
     window.addEventListener("resize", resizeHandler);
     return () => {
       window.clearTimeout(resizeTimer);
@@ -66,7 +66,7 @@ const MainContainer = memo(function MainContainer({ children }: PropsWithChildre
       {isDesktopView && children}
       <div id="smooth-wrapper">
         <div id="smooth-content">
-          <main className="container-main">
+          <div className="container-main">
             <Landing>{!isDesktopView && children}</Landing>
             <About />
             <div className="reveal-on-scroll">
@@ -91,11 +91,11 @@ const MainContainer = memo(function MainContainer({ children }: PropsWithChildre
             <div className="reveal-on-scroll">
               <Contact />
             </div>
-          </main>
+          </div>
         </div>
       </div>
     </div>
   );
-});
+};
 
 export default MainContainer;
