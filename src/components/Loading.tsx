@@ -6,34 +6,31 @@ import "./styles/Loading.css";
 const Loading = memo(function Loading({ percent }: { percent: number }) {
   const { setIsLoading } = useLoading();
   const [loaded, setLoaded] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     if (percent >= 100 && !loaded) {
       const showWelcomeTimer = window.setTimeout(() => setLoaded(true), 600);
-      const revealSiteTimer = window.setTimeout(() => setIsLoaded(true), 1600);
-      return () => {
-        window.clearTimeout(showWelcomeTimer);
-        window.clearTimeout(revealSiteTimer);
-      };
+      return () => window.clearTimeout(showWelcomeTimer);
     }
   }, [percent, loaded]);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!clicked) return;
 
     let cancelled = false;
-    setClicked(true);
 
-    const timeoutId = window.setTimeout(async () => {
+    const timeoutId = window.setTimeout(() => {
       if (cancelled) return;
-      try {
-        const { initialFX } = await import("./utils/initialFX");
-        initialFX();
-      } catch (error) {
-        console.error("Initial animation failed:", error);
-      }
+      import("./utils/initialFX")
+        .then((module) => {
+          if (!cancelled && module.initialFX) {
+            module.initialFX();
+          }
+        })
+        .catch((error) => {
+          console.error("Initial animation failed:", error);
+        });
       setIsLoading(false);
     }, 900);
 
@@ -46,7 +43,7 @@ const Loading = memo(function Loading({ percent }: { percent: number }) {
       window.clearTimeout(timeoutId);
       window.clearTimeout(fallbackId);
     };
-  }, [isLoaded, setIsLoading]);
+  }, [clicked, setIsLoading]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const { currentTarget: target } = e;
@@ -54,6 +51,11 @@ const Loading = memo(function Loading({ percent }: { percent: number }) {
     target.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
     target.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
   }, []);
+
+  const handleClick = useCallback(() => {
+    if (!loaded || clicked) return;
+    setClicked(true);
+  }, [loaded, clicked]);
 
   return (
     <>
@@ -82,6 +84,7 @@ const Loading = memo(function Loading({ percent }: { percent: number }) {
         <div
           className={`loading-wrap ${clicked ? "loading-clicked" : ""}`}
           onMouseMove={handleMouseMove}
+          onClick={handleClick}
         >
           <div className="loading-hover"></div>
           <div className={`loading-button ${loaded ? "loading-complete" : ""}`}>
