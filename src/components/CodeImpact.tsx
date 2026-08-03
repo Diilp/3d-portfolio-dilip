@@ -1,4 +1,5 @@
 import "./styles/ProfessionalSections.css";
+import { SOCIAL_LINKS } from "../utils/constants";
 
 const activityCells = [
   1, 2, 3, 2, 4, 3, 1, 0, 3, 4, 2, 1, 3, 4, 2, 1, 0, 2, 3, 3, 4, 1, 3, 4,
@@ -24,7 +25,7 @@ const CodeImpact = () => {
               <h3>GitHub Activity</h3>
               <strong>2024 - 2026</strong>
             </div>
-            <a href="https://github.com/" target="_blank" rel="noreferrer">
+            <a href={SOCIAL_LINKS.GITHUB} target="_blank" rel="noreferrer">
               View Profile
             </a>
           </div>
@@ -66,7 +67,7 @@ const CodeImpact = () => {
               <b>DSA</b>
             </div>
           </div>
-          <a href="https://leetcode.com/" target="_blank" rel="noreferrer">
+          <a href={SOCIAL_LINKS.LEETCODE} target="_blank" rel="noreferrer">
             View Full Profile
           </a>
         </article>
