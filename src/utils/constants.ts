@@ -100,10 +100,11 @@ export const FEATURES = {
  * Social Media Links
  */
 export const SOCIAL_LINKS = {
-  GITHUB: "https://github.com/yourusername",
-  LINKEDIN: "https://linkedin.com/in/yourusername",
-  TWITTER: "https://twitter.com/yourusername",
-  EMAIL: "your.email@example.com",
+  GITHUB: "https://github.com/Diilp",
+  LINKEDIN: "https://www.linkedin.com/in/dilip-kumar-yadav",
+  LEETCODE: "https://leetcode.com/dilipkumar533/",
+  EMAIL: "yadavdilipkumar533@gmail.com",
+  PHONE: "+918431056470",
 } as const;
 
 /**
@@ -111,8 +112,8 @@ export const SOCIAL_LINKS = {
  */
 export const PORTFOLIO_CONTENT = {
   NAME: "Dilip Kumar Yadav",
-  TITLE: "Full-Stack Developer & AI Builder",
-  BIO: "Innovative full-stack developer specializing in Angular, Node.js, Cloud Technologies, and AI solutions. Building the future with modern web technologies.",
+  TITLE: "Full-Stack Developer | Angular | Cloud | AI",
+  BIO: "Innovative full-stack developer specializing in Angular, Node.js, cloud technologies, and practical AI solutions.",
   LOCATION: "India",
 } as const;
 

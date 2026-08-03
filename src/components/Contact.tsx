@@ -3,6 +3,7 @@ import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
 import { MdMailOutline, MdPhone, MdSend } from "react-icons/md";
 import { SiLeetcode } from "react-icons/si";
 import "./styles/Contact.css";
+import { SOCIAL_LINKS } from "../utils/constants";
 
 const Contact = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -16,7 +17,7 @@ const Contact = () => {
     const body = encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\nOrganization: ${company}\n\n${message}`
     );
-    window.location.href = `mailto:yadavdilipkumar533@gmail.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${SOCIAL_LINKS.EMAIL}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -30,22 +31,22 @@ const Contact = () => {
             <h2>
               Let's build something <span>exceptional.</span>
             </h2>
-            <a href="tel:+918431056470" className="contact-line">
+            <a href={`tel:${SOCIAL_LINKS.PHONE}`} className="contact-line">
               <MdPhone /> +91 84310 56470
             </a>
             <a
-              href="mailto:yadavdilipkumar533@gmail.com"
+              href={`mailto:${SOCIAL_LINKS.EMAIL}`}
               className="contact-line"
             >
-              <MdMailOutline /> yadavdilipkumar533@gmail.com
+              <MdMailOutline /> {SOCIAL_LINKS.EMAIL}
             </a>
-            <a href="https://github.com/" target="_blank" rel="noreferrer" className="contact-line">
+            <a href={SOCIAL_LINKS.GITHUB} target="_blank" rel="noreferrer" className="contact-line">
               <FaGithub /> GitHub
             </a>
-            <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="contact-line">
+            <a href={SOCIAL_LINKS.LINKEDIN} target="_blank" rel="noreferrer" className="contact-line">
               <FaLinkedinIn /> LinkedIn
             </a>
-            <a href="https://leetcode.com/" target="_blank" rel="noreferrer" className="contact-line">
+            <a href={SOCIAL_LINKS.LEETCODE} target="_blank" rel="noreferrer" className="contact-line">
               <SiLeetcode /> LeetCode
             </a>
           </aside>

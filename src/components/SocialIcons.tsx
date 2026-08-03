@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import HoverLinks from "./HoverLinks";
 import { SiLeetcode } from "react-icons/si";
 import { MdEmail } from "react-icons/md";
+import { SOCIAL_LINKS } from "../utils/constants";
 
 const SocialIcons = () => {
   useEffect(() => {
@@ -58,7 +59,7 @@ const SocialIcons = () => {
       <div className="social-icons" data-cursor="icons" id="social">
         <span>
           <a
-            href="https://github.com/"
+            href={SOCIAL_LINKS.GITHUB}
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
@@ -68,7 +69,7 @@ const SocialIcons = () => {
         </span>
         <span>
           <a
-            href="https://www.linkedin.com/"
+            href={SOCIAL_LINKS.LINKEDIN}
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
@@ -78,7 +79,7 @@ const SocialIcons = () => {
         </span>
         <span>
           <a
-            href="https://leetcode.com/"
+            href={SOCIAL_LINKS.LEETCODE}
             target="_blank"
             rel="noreferrer"
             aria-label="LeetCode"
@@ -87,7 +88,7 @@ const SocialIcons = () => {
           </a>
         </span>
         <span>
-          <a href="mailto:yadavdilipkumar533@gmail.com" aria-label="Email">
+          <a href={`mailto:${SOCIAL_LINKS.EMAIL}`} aria-label="Email">
             <MdEmail />
           </a>
         </span>
